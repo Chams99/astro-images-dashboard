@@ -1,0 +1,85 @@
+---
+import '../styles/global.css';
+import App from '../components/App';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="Landscape UI with Neumorphism" />
+    <title>Landscape UI | Astro + Bun</title>
+  </head>
+  <body>
+    <!-- Toast Notifications Container -->
+    <div id="toast-container"></div>
+
+    <App client:load />
+
+    <script>
+      // Toast notification system
+      let toastId = 0;
+      const toastContainer = document.getElementById('toast-container');
+      
+      function showToast(message, type = 'info') {
+        if (!toastContainer) return;
+        
+        const id = `toast-${toastId++}`;
+        const toast = document.createElement('div');
+        toast.id = id;
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+          <div class="toast-content">
+            ${type === 'success' ? '✓ ' : type === 'warning' ? '⚠ ' : 'ℹ '}
+            ${message}
+          </div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Trigger animation
+        requestAnimationFrame(() => {
+          toast.classList.add('show');
+        });
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+          toast.classList.add('hide');
+          setTimeout(() => toast.remove(), 300);
+        }, 2500);
+      }
+
+      // Make toast function globally available
+      window.showToast = showToast;
+    </script>
+  </body>
+</html>
+
+<style>
+  html, body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  #toast-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+</style>

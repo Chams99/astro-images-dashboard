@@ -1,0 +1,24 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  class?: string;
+}
+
+const { title, subtitle, class: className = "" } = Astro.props;
+---
+
+<div class={`neumorph-card ${className}`}>
+  {title && <h3 class="mb-2">{title}</h3>}
+  {subtitle && <p style="color: var(--text-secondary); font-size: 0.9rem;">{subtitle}</p>}
+  <slot />
+</div>
+
+<style>
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+  }
+</style>
